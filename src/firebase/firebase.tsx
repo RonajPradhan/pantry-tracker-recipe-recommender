@@ -1,6 +1,11 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import {
+	createUserWithEmailAndPassword,
+	getAuth,
+	signInWithEmailAndPassword,
+} from 'firebase/auth';
+import {
 	addDoc,
 	getFirestore,
 	collection,
@@ -25,6 +30,7 @@ const firebaseConfig = {
 // Initialize Firebase
 
 export const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
 
 // const analytics = getAnalytics(app);
 
@@ -88,6 +94,32 @@ export async function getAndSearchItems(searchTerm: string) {
 			};
 		});
 		return items;
+	} catch (err) {
+		console.log(err);
+	}
+}
+
+export async function register(email: string, password: string) {
+	try {
+		const userCredentials = await createUserWithEmailAndPassword(
+			auth,
+			email,
+			password
+		);
+		return userCredentials.user;
+	} catch (err) {
+		console.log(err);
+	}
+}
+
+export async function login(email: string, password: string) {
+	try {
+		const userCredential = await signInWithEmailAndPassword(
+			auth,
+			email,
+			password
+		);
+		return userCredential.user;
 	} catch (err) {
 		console.log(err);
 	}
